@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test 1</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+</head>
+<body>
+<div id="app" class="container">
+    <form>
+        <div class="form-group row">
+            <label class="col-2">List</label>
+            <input type="text" class="form-control col-10" v-model="dataList" required>
+        </div>
+        <div class="form-group row">
+            <label class="col-2">ค้นหา</label>
+            <input type="text" class="form-control col-6" v-model="searchNum" required>
+            <a class="btn btn-warning col-auto  align-self-end" v-on:click="searchData">ค้นหา</a>
+        </div>
+        <div class="form-group row justify-content-md-center">
+            <label class="col-12 text-center">ประเภทการค้นหา</label>
+            <select class="form-control col-10" v-model="type" required>
+                <option value="1">Linear Search</option>
+                <option value="2">Binary Search</option>
+                <option value="3">Bubble Search</option>
+            </select>
+        </div>
+
+    </form>
+
+    <div>
+        <strong>ผลลัพธ์</strong>
+        <div id="result">
+            <div class="row">
+                <div class="col-12">
+                    List : [{{dataList}}]
+                </div>
+                <div class="col-12">
+                    Search : {{searchNum}}
+                </div>
+                <div class="col-12">
+                    <strong>Result:::</strong>
+                    <div v-html="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            dataList: '',
+            searchNum: '',
+            type: '',
+            result: ''
+        },
+        methods: {
+            linearSort(arr, target) {
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i] === target) { // Found it!
+                        this.result += `Round ${i + 1} ===> ${target}=${arr[i]} found !!<br>`;
+                        break;
+                    } else {
+                        this.result += `Round ${i + 1} ===> ${target} != ${arr[i]}<br>`;
+                    }
+                }
+            },
+            binarySort(data, target) {
+                let startIndex = 0;
+                let endIndex = data.length - 1;
+                while (startIndex <= endIndex) {
+                    let middleIndex = Math.floor((startIndex + endIndex) / 2);
+                    console.log(middleIndex);
+                    if (target === data[middleIndex]) {
+                        console.log("Target was found at index " + middleIndex);
+                        this.result += `Round ${middleIndex} ===> ${target}=${data[middleIndex]} found !!<br>`;
+                        break
+                    }
+                    if (target > data[middleIndex]) {
+                        console.log("Searching the right side of Array")
+                        this.result += `Round ${middleIndex} ===> ${target} != ${data[middleIndex]}<br>`;
+                        startIndex = middleIndex + 1;
+                    }
+                    if (target < data[middleIndex]) {
+                        console.log("Searching the left side of array")
+                        this.result += `Round ${middleIndex} ===> ${target} != ${data[middleIndex]}<br>`;
+                        endIndex = middleIndex - 1;
+                    } else {
+                        console.log("Not Found this loop iteration. Looping another iteration.")
+                    }
+                }
+            },
+            bubbleSort(arr) {
+                for (let j = arr.length - 1; j > 0; j--) {
+                    for (let i = 0; i < j; i++) {
+                        if (arr[i] > arr[i + 1]) {
+                            let temp = arr[i];
+                            arr[i] = arr[i + 1];
+                            arr[i + 1] = temp;
+                        }
+                    }
+
+                }
+                return arr;
+            },
+            searchData() {
+                console.log('Type : ' + this.type);
+                console.log('searchNum : ' + this.searchNum);
+                console.log(this.dataList.split(","))
+                let data = this.dataList.split(",");
+                let target = this.searchNum;
+                if (data.length > 0) {
+                    if (this.type == 1) {
+                        this.linearSort(data, target);
+                    }
+
+                    if (this.type == 2) {
+
+                        this.binarySort(data, target);
+                    }
+
+                    if (this.type == 3) {
+                        this.bubbleSort(data);
+                        this.linearSort(data, target)
+                        console.log(data);
+                    }
+                }
+
+
+            }
+        },
+    })
+</script>
+
+</body>
+</html>
